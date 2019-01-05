@@ -1,9 +1,13 @@
 <%@include file="Header.jsp"%>
 <html>
 <head>
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible"content="IE=11">
+<meta charset="utf-8">
+<link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
 <script type="text/javascript">
 $(function () {
     $('.button-checkbox').each(function () {
@@ -129,7 +133,7 @@ $(function () {
 				<div class="col-xs-4 col-sm-3 col-md-3">
 					<span class="button-checkbox">
 						<button type="button" class="btn" data-color="info" tabindex="7">I Agree</button>
-                        <input type="checkbox" name="t_c" id="t_c" class="hidden" value="true">
+                        <input type="checkbox" name="enable" id="enable" class="hidden" value="TRUE">
 					</span>
 				</div>
 				<div class="col-xs-12 col-sm-4 col-md-4">

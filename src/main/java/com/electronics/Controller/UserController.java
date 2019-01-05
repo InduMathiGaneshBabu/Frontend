@@ -2,6 +2,7 @@ package com.electronics.Controller;
 
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -48,12 +49,14 @@ public class UserController
 				page="AdminHome";
 				session.setAttribute("loggedIn",loggedIn);
 				session.setAttribute("username", username);
+				
 			}
 			else
 			{
 				loggedIn=true;
 				page="UserHome";
-			
+				session.setAttribute("loggedIn",loggedIn);
+				session.setAttribute("username", username);
 			}
 				
 		}
@@ -64,7 +67,7 @@ public class UserController
 	
 	
 	@RequestMapping( value="/addNewUsers", method=RequestMethod.POST)
-	public String AddUsers(@RequestParam("username")String username,@RequestParam("password")String password,@RequestParam("customername")String customername,@RequestParam("emailid")String emailid,@RequestParam("mobileno")String mobileno,@RequestParam("address")String address,@RequestParam("role")String role)
+	public String AddUsers(@RequestParam("username")String username,@RequestParam("password")String password,@RequestParam("customername")String customername,@RequestParam("emailid")String emailid,@RequestParam("mobileno")String mobileno,@RequestParam("address")String address,@RequestParam("role")String role,HttpSession session,@RequestParam("enable")boolean enable)
 	{
 		UserDetail userdetail=new UserDetail();
 		userdetail.setUsername(username);
@@ -74,8 +77,16 @@ public class UserController
 		userdetail.setMobileno(mobileno);
 		userdetail.setAddress(address);
 		userdetail.setRole(role);
+		userdetail.setEnabled(enable);
 		userDao.registerUser(userdetail);
 		return "Login";
+	}
+	
+	public List<UserDetail> listuserdetail(String role)
+	{
+	
+	List<UserDetail> listusers=userDao.listuserdetail("Role_User");
+	return listusers;
 	}
 	
 	

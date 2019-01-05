@@ -19,8 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.electronics.Dao.CategoryDao;
 import com.electronics.Dao.ProductDao;
+import com.electronics.Dao.SupplierDao;
 import com.electronics.model.Category;
 import com.electronics.model.Product;
+import com.electronics.model.Supplier;
 
 @Controller
 public class ProductController
@@ -30,6 +32,9 @@ public class ProductController
 	ProductDao productDao;
 	@Autowired
 	CategoryDao categoryDao;
+	@Autowired 
+	SupplierDao supplierDao;
+
 	
 	
 	@RequestMapping(value="/product")
@@ -40,6 +45,7 @@ public class ProductController
 		List<Product> listproducts=productDao.listproducts();
 		m.addAttribute("productList",listproducts);
 		m.addAttribute("categorylist",this.getcategorylist(categoryDao.listcategory()));
+		m.addAttribute("supplierlist",this.getSupplierlist(supplierDao.listsupplier()));
 	   	return "Product";
 	}
 	
@@ -51,6 +57,7 @@ public class ProductController
 	    List<Product> listproducts=productDao.listproducts();
 		m.addAttribute("productList",listproducts);
 		m.addAttribute("categorylist",this.getcategorylist(categoryDao.listcategory()));
+		m.addAttribute("supplierlist",this.getSupplierlist(supplierDao.listsupplier()));
 		
 		String path="C:\\Users\\Admin\\eclipse-workspace\\serviceFront\\src\\main\\webapp\\resources\\image\\";
 		path=path+String.valueOf(product.getProductid())+".jpg";
@@ -94,6 +101,18 @@ public class ProductController
 		return categorylist;
 		
 	}
+	public LinkedHashMap<Integer,String> getSupplierlist(List<Supplier> listsupplier)
+	{
+		
+		LinkedHashMap<Integer,String> supplierlist=new LinkedHashMap<Integer,String>();
+		
+		for(Supplier supplier:listsupplier)
+		{
+			supplierlist.put(supplier.getSupplierid(),supplier.getSuppliername());
+		}
+		return supplierlist;
+		
+	}
 	@RequestMapping(value="/deleteproducts/{productid}")
 	public String deleteproduct(@PathVariable("productid")int productid,Model m)
 	{
@@ -101,6 +120,7 @@ public class ProductController
 		productDao.deleteProduct(product);
 		Product product1=new Product();
 		m.addAttribute("categorylist",this.getcategorylist(categoryDao.listcategory()));
+		m.addAttribute("supplierlist",this.getSupplierlist(supplierDao.listsupplier()));
 		List<Product> listproducts=productDao.listproducts();
 		m.addAttribute("productList",listproducts);
 		m.addAttribute("product",product1);
@@ -113,33 +133,27 @@ public class ProductController
 		Product product=productDao.getProduct(productid);
 		m.addAttribute("product",product);
 		m.addAttribute("categorylist",this.getcategorylist(categoryDao.listcategory()));
+		m.addAttribute("supplierlist",this.getSupplierlist(supplierDao.listsupplier()));
 		List<Product> listproducts=productDao.listproducts();
 		m.addAttribute("productList",listproducts);
 		
 		Product product1=new Product();
 		m.addAttribute("product1",product1);
+		
+		
 		return "UpdateProduct";
 	}
 	@RequestMapping(value="/updateproduct",method=RequestMethod.POST)
-	public String updateProduct(@RequestParam("productname")String productname,@RequestParam("productid")int productid,@RequestParam("price")int price,@RequestParam("stock")int stock,@RequestParam("productdesc")String productdesc,@RequestParam("categoryid")String categoryid,@RequestParam("supplierid")String supplierid,@RequestParam("pimage")MultipartFile prodimage,Model m)
+	public String updateProduct(@ModelAttribute("product1")Product product1,Model m,@RequestParam("pimage")MultipartFile pimage)
 	{
-		Product product1=(Product)new Product();
-		product1.setCategoryid(categoryid);
-		product1.setPimage(prodimage);
-		product1.setPrice(price);
-		product1.setProductdesc(productdesc);
-		product1.setProductname(productname);
-		product1.setStock(stock);
-        product1.setSupplierid(supplierid);
-      
-        String path="C:\\Users\\Admin\\eclipse-workspace\\serviceFront\\src\\main\\webapp\\resources\\image\\";
+	    String path="C:\\Users\\Admin\\eclipse-workspace\\serviceFront\\src\\main\\webapp\\resources\\image\\";
 		path=path+String.valueOf(product1.getProductid())+".jpg";
 		File imagefile=new File(path);
-		if(!prodimage.isEmpty())
+		if(!pimage.isEmpty())
 		{
 			try
 			{
-				byte[] buffer=prodimage.getBytes();
+				byte[] buffer=pimage.getBytes();
 				FileOutputStream fos=new FileOutputStream(imagefile);
 				BufferedOutputStream bs=new BufferedOutputStream(fos);
 				bs.write(buffer);
@@ -156,12 +170,14 @@ public class ProductController
 			m.addAttribute("error occured during file upload", "+e");
 			
 		}
-		
-		productDao.updateProduct(product1);
+		 productDao.updateProduct(product1);
+        Product product2=new Product();
 	    List<Product> listproducts=productDao.listproducts();
 		m.addAttribute("productList",listproducts);
 		m.addAttribute("categorylist",this.getcategorylist(categoryDao.listcategory()));
-		return"Product";
+		m.addAttribute("supplierlist",this.getSupplierlist(supplierDao.listsupplier()));
+		m.addAttribute("product",product2);
+		return "Product";
 	}
 	@RequestMapping( value="/productdisplay")
 	public String Productdisplay(Model m)
